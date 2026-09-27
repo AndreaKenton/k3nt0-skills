@@ -1,28 +1,41 @@
 # AGENTS.md — {{PROGETTO}} ({{NNN}})
 
-Solo **regole e indice**: la conoscenza sta in `{{MEMDIR}}/`, le procedure negli strumenti
-del progetto. Niente date: il file resta **byte-identico fra le sessioni** (prefisso in
-prompt cache).
+Questo file è il **punto d'ingresso** del progetto: contiene solo le **regole** e la **mappa**
+della memoria. La conoscenza sta in `{{MEMDIR}}/`, il *perché* in `docs/ADR/`, le procedure
+negli strumenti del progetto.
+
+<!-- REGOLE-DEL-PATTERN: v2 -->
 
 ## Regole
 
-1. **Una cosa, un posto**: la regola operativa nel capitolo, il *perché* in un ADR, la
-   cronologia in `{{MEMDIR}}/97_CRONACA.md`. Mai duplicare.
-2. **Mai leggere tutta la memoria**: parti da `{{MEMDIR}}/00_STATO.md`, poi **solo** i capitoli
-   indicati dall'indice qui sotto.
-3. **L'indice è derivato, non si tocca a mano**: si rigenera con `scripts/memoria_index.py`.
-4. **Chiusura del task**: `python scripts/memoria_check.py` deve uscire **0**.
-5. **Stabilità del prefisso**: nessuna data, nessun timestamp, nessun contatore in questo file.
+1. **Una cosa, un posto** — la regola operativa nel capitolo di `{{MEMDIR}}/`, il *perché* in
+   `docs/ADR/`, la cronologia in `{{MEMDIR}}/97_CRONACA.md`. Mai duplicare.
+2. **Leggi mirato** — parti da `{{MEMDIR}}/00_STATO.md`, poi **solo** i capitoli pertinenti
+   indicati nella mappa in coda. Gli archivi sono il livello più basso: si citano, non si
+   scandiscono in blocco.
+3. **La mappa è derivata** — si rigenera con `scripts/memoria_index.py` (mai a mano) e si
+   verifica con `scripts/memoria_check.py`, che deve uscire **0**. Se esce non-zero la memoria è
+   disallineata: **avvisa l'utente, ripara, non chiudere il task**.
+4. **Questo file è il prefisso in cache** — resta byte-stabile fra le sessioni e fra i task
+   della stessa sessione: nessuna data, nessun contatore, nessuna stima di token. Le regole
+   stanno **prima** della mappa: così aggiornare la mappa non invalida il blocco delle regole.
+5. **Le procedure non stanno qui** — in questo file c'è solo *quando* caricare una procedura; il
+   *come* vive in una capacità on demand (skill, prompt, documento indicizzato).
+6. **La memoria si aggiorna mentre lavori** — conoscenza nuova → capitolo (nuovo o esistente);
+   decisione → ADR; fine sessione → `{{MEMDIR}}/00_STATO.md` e una riga in
+   `{{MEMDIR}}/97_CRONACA.md`; poi `memoria_index.py` + `memoria_check.py`.
+7. **Un tema, un capitolo** — oltre 6.000 token un capitolo va spezzato, oltre 8.000 è
+   vietato: la memoria cresce in capitoli, non in un monolite.
 
-## Indice
+{{PROCEDURE}}
+
+## Mappa della memoria
 
 <!-- INDICE:INIZIO (generato: non modificare a mano) -->
 
 | capitolo | leggi quando · parole chiave |
 |---|---|
-| `00_STATO.md` | inizio sessione · stato, prossimi passi |
-| `97_CRONACA.md` | cronologia delle sessioni · storico, decisioni passate |
+| `00_STATO.md` | inizio sessione, sempre · stato, prossimi passi |
+| `97_CRONACA.md` | cronologia: cosa è stato fatto in passato · storico, sessioni |
 
 <!-- INDICE:FINE -->
-
-{{PROCEDURE}}

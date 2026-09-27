@@ -9,7 +9,7 @@ asset. Nessuna dipendenza da un agente o da un modello specifico.
 
 | Skill | Cosa fa |
 |---|---|
-| [`progressive-memory-management`](skills/progressive-memory-management/) | Gestione della memoria di progetto a livelli **L0-L3** (progressive disclosure): `init` di un nuovo progetto o `migrate` non distruttiva di uno esistente, con `AGENTS.md`, capitoli `memoria/`, ADR e script di verifica. |
+| [`progressive-memory-management`](skills/progressive-memory-management/) | Memoria di progetto a livelli **L0-L3** come *wiki autoconsistente*: `init` di un progetto nuovo, `migrate` non distruttivo di uno esistente, `check` di coerenza. Indici **derivati** (mappa in `AGENTS.md` e indice delle decisioni), invarianti verificati (I1–I11), prefisso stabile per la prompt cache. Nessuno strumento o estensione richiesti; adattatori per pi opzionali. |
 
 ## Come si usa con qualsiasi agente
 
@@ -54,14 +54,24 @@ Ogni skill è **autocontenuta**: puoi prenderne solo la cartella.
 ```
 k3nt0-skills/
 ├── README.md
+├── CHANGELOG.md
 ├── LICENSE
+├── package.json
 └── skills/
     └── progressive-memory-management/
         ├── SKILL.md
         ├── README.md
+        ├── VERSION
+        ├── CHANGELOG.md
         ├── scripts/manage_memory.py
         └── templates/
 ```
+
+## Versioni
+
+Il numero in [`package.json`](package.json) è la versione del **bundle**: a ogni tag `v*` la
+workflow crea una release con un archivio per skill. Ogni skill tiene il proprio `VERSION` e
+`CHANGELOG.md` accanto a `SKILL.md`. Storia del bundle in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Aggiungere una nuova skill
 

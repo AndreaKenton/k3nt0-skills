@@ -1,32 +1,116 @@
-# {{MEMDIR}}/ — come è organizzata
+# {{MEMDIR}}/ — la wiki del progetto
 
-Progressive disclosure a 4 livelli:
+Questa cartella è la **memoria durevole** del progetto: una wiki che l'agente mantiene e
+interroga a ogni task. Non è un diario né un monolite: è una gerarchia che resta coerente da
+sola, perché **gli indici sono derivati** dai file e **la coerenza è verificata** da uno script.
 
-| Livello | Dove | Costo |
+| livello | dove | quando entra nel contesto |
 |---|---|---|
-| L0 | `AGENTS.md` (regole + indice) | sempre |
-| L1 | tabella-indice dentro `AGENTS.md` | sempre |
-| L2 | capitoli `NN_*.md` con frontmatter `leggi_quando` + `parole_chiave` | on demand |
-| L3 | `97_CRONACA.md`, `docs/ADR/`, `prompt/archivio/` | raro |
+| L0 | `AGENTS.md` (regole + mappa) | sempre — è il prefisso in prompt cache |
+| L1 | la mappa in coda a `AGENTS.md` (generata) | sempre — è dentro L0 |
+| L2 | `{{MEMDIR}}/NN_*.md` (frontmatter `leggi_quando` + `parole_chiave`) | on demand, solo i capitoli pertinenti |
+| L3 | `97_CRONACA.md`, `docs/ADR/`, archivi (`prompt/archivio/`, …) | raro, su richiesta esplicita |
+
+**Pacchetto**: `{{VERSION}}`. Questo file **non** è in L0: aggiornarlo o leggerlo non tocca il
+prefisso in cache.
+
+Lo stato durevole vive **qui**, non nella conversazione: se il contesto viene riassunto o
+compattato, `00_STATO.md` è ciò che resta, mentre la chat no. Aggiornarlo a fine sessione è ciò
+che rende una sessione lunga ripartibile senza rileggere tutto.
+
+## Leggere (e cosa non leggere)
+
+- **Mirato**: `00_STATO.md` → mappa → solo i capitoli pertinenti. Il resto non serve a questo task.
+- **Gli archivi si citano, non si scandiscono**: cronologia e `prompt/archivio/` si aprono solo
+  quando la domanda li richiede.
+- **Esplorazione ampia in un contesto isolato**: per capire un'area vasta (più file, più
+  cartelle) non riempire il contesto principale di letture — usa una sessione o un processo
+  separato che riporti solo il riassunto (su pi: sub-agente di sola lettura). Costa 1-2k token
+  invece di decine di migliaia.
+
+## Dove sta la memoria (spazio)
+
+Se una **sottocartella** del progetto è autonoma (un sottosistema con regole proprie), le sue
+regole stanno lì, in un file di contesto locale, non nel file di radice: così valgono solo quando
+si lavora dentro quella parte (pi: `AGENTS.md` o `AGENTS.override.md` nella sottocartella;
+Claude Code: `CLAUDE.md`; Cursor: `.cursor/rules`). Infilare tutto nella radice è ciò che fa
+crescere L0 finché non entra più in cache.
+
+## Contratto di manutenzione
+
+1. **LEGGI** — `00_STATO.md`, poi solo i capitoli che la mappa segnala come pertinenti.
+   Il *perché* di una scelta sta in `docs/ADR/`; la cronologia in `97_CRONACA.md`.
+2. **SCRIVI** — ogni cosa che impari ha un posto preciso:
+   conoscenza nuova → **capitolo** (`NN_*.md`); scelta architetturale → **ADR**; fatto della
+   sessione → **una riga** in `97_CRONACA.md`; stato e prossimi passi → **`00_STATO.md`**.
+   Se due file dicono la stessa cosa, uno dei due va tolto.
+3. **VERIFICA** — dopo ogni modifica alla memoria:
+   `python scripts/memoria_index.py` (rigenera gli indici) e
+   `python scripts/memoria_check.py` (**deve uscire 0**).
+4. **RIPARA** — se il check esce non-zero: **avvisa l'utente**, ripara, e non chiudere il task.
+   Indice disallineato → rigeneralo. Capitolo oltre soglia → **spezza** in due capitoli numerati.
+   Titolo o paragrafo duplicato → tieni una copia e rimanda all'altra. Decisione superata →
+   aggiorna il suo `stato`, non cancellarla.
+
+## Invarianti
+
+Sono la definizione di "memoria autoconsistente"; `scripts/memoria_check.py` li verifica tutti.
+
+| # | invariante |
+|---|---|
+| I1 | `AGENTS.md` ha i marcatori della mappa; esistono `00_STATO.md` e `97_CRONACA.md` |
+| I2 | ogni capitolo ha frontmatter `leggi_quando` + `parole_chiave` |
+| I3 | gli indici derivati sono allineati ai file (mappa e indice delle decisioni) |
+| I4 | nessun capitolo orfano, nessun riferimento a capitoli inesistenti, nessun link rotto |
+| I5 | L0 stabile e minimale: niente date/contatori/stime di token, entro budget, regole prima della mappa |
+| I6 | capitoli entro le soglie (6.000 token avviso, 8.000 errore) |
+| I7 | nessun titolo duplicato fra capitoli (una cosa, un posto) |
+| I8 | nessun paragrafo identico fra i file della memoria (≥ 40 parole) — per una duplicazione voluta: una riga `<!-- duplicato-ok -->` |
+| I9 | decisioni numerate una volta sola, con stato valido e titolo coerente |
+| I10 | le capacità on demand locali (`.pi/skills/*/SKILL.md`), se presenti, hanno frontmatter valido |
+| I11 | questo file dichiara la versione del pacchetto (`pacchetto:`) |
+
+## Prompt cache: cosa la invalida e cosa no
+
+Il prefisso (L0 + le parti di contesto che non cambiano) resta in cache fra i task della stessa
+sessione e fra sessioni successive; i token serviti da cache costano molto meno degli input
+token nuovi (indicativamente **10–30× meno**, secondo il provider). Quindi:
+
+- **Modificare i capitoli non tocca la cache**: L2 non è nel prefisso. Scrivere è gratis.
+- **Modificare `AGENTS.md` la invalida** (dal punto di modifica in poi): le regole restano
+  ferme; l'unica parte che si muove è la mappa in coda, e si rigenera **una volta**, non a ogni
+  micro-modifica.
+- **Le date non entrano mai in L0**: la data la porta `97_CRONACA.md` (L3), che nessuno ha nel
+  prefisso.
+- **Anche le descrizioni delle capacità on demand** (per esempio `.pi/skills/<nome>/SKILL.md`)
+  fanno parte del prefisso: cambiarne una invalida la cache per tutte le sessioni, quindi si
+  cambiano **in blocco** e solo quando serve.
+- Per confrontare l'impronta di L0 fra due sessioni: `python scripts/memoria_check.py --hash`.
 
 ## Aggiungere un capitolo
 
-1. Crea `{{MEMDIR}}/NN_nome.md` (NN = numero, due cifre) con frontmatter:
+1. Crea `{{MEMDIR}}/NN_nome.md` (NN a due cifre, progressivo) con frontmatter:
 
    ```markdown
    ---
-   leggi_quando: "<quando serve leggerlo>"
-   parole_chiave: "<parole per l'indice>"
+   leggi_quando: "<in quali task serve leggerlo>"
+   parole_chiave: "<parole per la mappa>"
    ---
 
    # NN — Titolo
    ```
 
-2. Rigenera l'indice e verifica (dalla radice del progetto):
+2. Rigenera e verifica: `python scripts/memoria_index.py && python scripts/memoria_check.py`.
 
-   ```bash
-   python scripts/memoria_index.py
-   python scripts/memoria_check.py    # deve uscire 0
-   ```
+## Registrare una decisione
 
-Soglie: oltre ~6.000 token un capitolo va spezzato; oltre ~8.000 è vietato.
+Una scheda in `docs/ADR/`, numerata a 3 cifre (`ADR-001_<slug>.md`), partendo da
+`docs/ADR/000-template.md`. L'**indice delle decisioni** (`docs/ADR/README.md`) è derivato:
+si rigenera con lo stesso `memoria_index.py`. Nella scheda sta il *perché*; la regola operativa
+va nel capitolo, che rimanda all'ADR.
+
+## Retrofit di un progetto già avviato
+
+Se il progetto non ha ancora questo pattern, non riscriverlo a mano: la skill
+`progressive-memory-management` aggiunge **solo** ciò che manca (`migrate`, non distruttivo) e
+`check` dice cosa resta da unire a mano.

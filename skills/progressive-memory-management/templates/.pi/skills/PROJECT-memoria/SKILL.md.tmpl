@@ -1,31 +1,42 @@
 ---
 name: {{SLUG}}-memoria
-description: Procedura per leggere, aggiornare e verificare la memoria stratificata di questo progetto ({{MEMDIR}}/, indice derivato in AGENTS.md, script memoria_index/memoria_check). Usa quando aggiorni lo stato, aggiungi un capitolo o una decisione ADR, o devi caricare il contesto del progetto.
+description: Procedura per leggere, aggiornare e verificare la memoria stratificata di questo progetto ({{MEMDIR}}/, mappa derivata in AGENTS.md, script memoria_index/memoria_check). Usa quando aggiorni lo stato, aggiungi un capitolo o una decisione ADR, o devi caricare il contesto del progetto.
 ---
 
 # Memoria del progetto {{PROGETTO}}
 
 Radice: la cartella che contiene `AGENTS.md` e `scripts/`. Tutti i comandi si eseguono da lì.
+Il contratto completo è in `{{MEMDIR}}/README.md`: qui c'è la procedura operativa.
 
 ## Leggere (mirato, non tutto)
 
-1. `{{MEMDIR}}/00_STATO.md` (punto di partenza, sempre).
-2. L'indice in `AGENTS.md`: leggi **solo** i capitoli pertinenti al task.
-3. Il *perché* di una scelta sta in `docs/ADR/`; la cronologia in `{{MEMDIR}}/97_CRONACA.md`
-   (raro). Mai scandire `prompt/archivio/` in blocco.
+1. `{{MEMDIR}}/00_STATO.md` — punto di partenza di ogni sessione.
+2. La mappa in coda a `AGENTS.md` — leggi **solo** i capitoli pertinenti al task.
+3. Il *perché* di una scelta: `docs/ADR/` (indice in `docs/ADR/README.md`). La cronologia
+   (`{{MEMDIR}}/97_CRONACA.md`) e gli archivi si leggono solo se la domanda li richiede: mai
+   scandirli in blocco.
 
-## Aggiornare
+Per capire un'area vasta (più file, più cartelle) non riempire il contesto principale di
+letture: usa un processo di esplorazione isolato che riporta solo il riassunto.
+
+## Aggiornare (una cosa, un posto)
 
 - **Conoscenza nuova** → capitolo `{{MEMDIR}}/NN_*.md` con frontmatter `leggi_quando` +
-  `parole_chiave` (una cosa, un posto).
-- **Decisione nuova** → `/nuovo-adr` (procedura in `.pi/prompts/nuovo-adr.md`).
-- **Fine sessione** → aggiorna `{{MEMDIR}}/00_STATO.md` e aggiungi una riga a `97_CRONACA.md`.
+  `parole_chiave`; se il tema esiste già, aggiorna quel capitolo.
+- **Decisione** → una scheda in `docs/ADR/` (procedura in `.pi/prompts/nuovo-adr.md`): nella
+  scheda il *perché*, nel capitolo la regola operativa che vi rimanda.
+- **Fine sessione** → `{{MEMDIR}}/00_STATO.md` (stato e prossimi passi) e una riga in
+  `{{MEMDIR}}/97_CRONACA.md`.
+- **Mai** aggiungere date, contatori o stime di token a `AGENTS.md`: è il prefisso in cache.
 
 ## Verificare (chiude il task)
 
 ```bash
-python scripts/memoria_index.py
-python scripts/memoria_check.py    # deve uscire 0
+python scripts/memoria_index.py     # rigenera mappa e indice delle decisioni
+python scripts/memoria_check.py     # invarianti: deve uscire 0
 ```
 
-Se `memoria_check` esce non-zero la memoria è incoerente: non chiudere il task.
+Se `memoria_check` esce non-zero la memoria è disallineata: **avvisa l'utente, ripara, e non
+chiudere il task**. Indice vecchio → rigeneralo. Capitolo oltre 6.000 token → spezzalo in due
+capitoli numerati. Titolo o paragrafo duplicato → tieni una copia sola. Per confrontare
+l'impronta di `AGENTS.md` fra sessioni (prompt cache): `python scripts/memoria_check.py --hash`.
