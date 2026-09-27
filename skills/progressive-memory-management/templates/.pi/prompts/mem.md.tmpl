@@ -1,0 +1,13 @@
+---
+description: Carica la memoria di progetto in modo mirato (stato + capitoli pertinenti)
+argument-hint: "[dominio]"
+---
+Prima di rispondere, carica la memoria del progetto **in modo mirato** (non tutta).
+
+1. Leggi `{{MEMDIR}}/00_STATO.md`.
+2. Guarda l'indice in `AGENTS.md`. Se `$ARGUMENTS` è vuoto, elenca brevemente i capitoli
+   disponibili e chiedimi quale ambito affrontiamo (o deducilo dal mio messaggio).
+3. Se `$ARGUMENTS` indica un dominio, leggi **solo** il capitolo corrispondente.
+
+Regole: non leggere `97_CRONACA.md` né `prompt/archivio/` se non richiesto; per il *perché*
+di una decisione vai a `docs/ADR/`. Al termine dichiara quali capitoli hai caricato.

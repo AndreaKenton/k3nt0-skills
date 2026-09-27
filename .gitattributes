@@ -1,0 +1,11 @@
+# Normalizza a LF nel repository (script Python/TS portabili su ogni OS)
+* text=auto eol=lf
+
+# Binari
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.docx binary

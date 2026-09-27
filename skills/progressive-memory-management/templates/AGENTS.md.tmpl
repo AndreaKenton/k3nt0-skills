@@ -1,0 +1,28 @@
+# AGENTS.md — {{PROGETTO}} ({{NNN}})
+
+Solo **regole e indice**: la conoscenza sta in `{{MEMDIR}}/`, le procedure negli strumenti
+del progetto. Niente date: il file resta **byte-identico fra le sessioni** (prefisso in
+prompt cache).
+
+## Regole
+
+1. **Una cosa, un posto**: la regola operativa nel capitolo, il *perché* in un ADR, la
+   cronologia in `{{MEMDIR}}/97_CRONACA.md`. Mai duplicare.
+2. **Mai leggere tutta la memoria**: parti da `{{MEMDIR}}/00_STATO.md`, poi **solo** i capitoli
+   indicati dall'indice qui sotto.
+3. **L'indice è derivato, non si tocca a mano**: si rigenera con `scripts/memoria_index.py`.
+4. **Chiusura del task**: `python scripts/memoria_check.py` deve uscire **0**.
+5. **Stabilità del prefisso**: nessuna data, nessun timestamp, nessun contatore in questo file.
+
+## Indice
+
+<!-- INDICE:INIZIO (generato: non modificare a mano) -->
+
+| capitolo | leggi quando · parole chiave |
+|---|---|
+| `00_STATO.md` | inizio sessione · stato, prossimi passi |
+| `97_CRONACA.md` | cronologia delle sessioni · storico, decisioni passate |
+
+<!-- INDICE:FINE -->
+
+{{PROCEDURE}}

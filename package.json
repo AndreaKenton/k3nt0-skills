@@ -1,0 +1,7 @@
+{
+  "name": "k3nt0-skills",
+  "version": "0.1.0",
+  "description": "Skill agnostiche per agenti di coding e modelli generici (formato Agent Skills): gestione della memoria di progetto a livelli (L0-L3) e altro.",
+  "keywords": ["agent-skills", "skills", "ai-agents", "memory", "progressive-disclosure", "agents-md"],
+  "license": "MIT"
+}

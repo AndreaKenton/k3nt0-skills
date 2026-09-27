@@ -1,0 +1,32 @@
+name: Release skill archives
+
+# A ogni tag (es. v0.1.0) crea un archivio per OGNI skill e lo allega alla release,
+# così chi vuole solo una skill la scarica con un click senza clonare il repo.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Crea un archivio per ogni skill
+        run: |
+          mkdir -p dist
+          for d in skills/*/; do
+            name=$(basename "$d")
+            (cd skills && zip -r "../dist/${name}.zip" "$name")
+          done
+          ls -la dist
+
+      - name: Allega gli archivi alla release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true

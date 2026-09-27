@@ -1,0 +1,22 @@
+---
+description: Crea un nuovo ADR, lo indicizza e aggiorna la memoria
+argument-hint: "<titolo della decisione>"
+---
+Devo registrare una nuova decisione architetturale: **$ARGUMENTS**
+
+1. Guarda in `docs/ADR/` l'ultimo numero usato e segui `docs/ADR/000-template.md`.
+2. Se manca qualcosa (decisione, motivazione, alternative, impatto), chiedimi **solo** le
+   informazioni mancanti: non inventare motivazioni.
+3. Crea `docs/ADR/ADR-NNN_<slug>.md` (NNN a 3 cifre, slug minuscolo con underscore).
+4. Metti la **regola operativa** nel capitolo di `{{MEMDIR}}/` interessato, rimandando all'ADR
+   invece di duplicarne il testo.
+5. Rigenera e verifica (dalla radice del progetto):
+
+   ```bash
+   python scripts/memoria_index.py
+   python scripts/memoria_check.py    # deve uscire 0
+   ```
+
+6. Se la decisione cambia lo stato, aggiorna `{{MEMDIR}}/00_STATO.md` e `97_CRONACA.md`.
+
+Al termine riporta: numero dell'ADR creato, file toccati, esito del check.

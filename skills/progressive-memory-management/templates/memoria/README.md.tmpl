@@ -1,0 +1,32 @@
+# {{MEMDIR}}/ — come è organizzata
+
+Progressive disclosure a 4 livelli:
+
+| Livello | Dove | Costo |
+|---|---|---|
+| L0 | `AGENTS.md` (regole + indice) | sempre |
+| L1 | tabella-indice dentro `AGENTS.md` | sempre |
+| L2 | capitoli `NN_*.md` con frontmatter `leggi_quando` + `parole_chiave` | on demand |
+| L3 | `97_CRONACA.md`, `docs/ADR/`, `prompt/archivio/` | raro |
+
+## Aggiungere un capitolo
+
+1. Crea `{{MEMDIR}}/NN_nome.md` (NN = numero, due cifre) con frontmatter:
+
+   ```markdown
+   ---
+   leggi_quando: "<quando serve leggerlo>"
+   parole_chiave: "<parole per l'indice>"
+   ---
+
+   # NN — Titolo
+   ```
+
+2. Rigenera l'indice e verifica (dalla radice del progetto):
+
+   ```bash
+   python scripts/memoria_index.py
+   python scripts/memoria_check.py    # deve uscire 0
+   ```
+
+Soglie: oltre ~6.000 token un capitolo va spezzato; oltre ~8.000 è vietato.
