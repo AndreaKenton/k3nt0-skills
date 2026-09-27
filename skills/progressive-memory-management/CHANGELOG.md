@@ -4,6 +4,13 @@ Numerazione del **pacchetto** (questa cartella): la prima pubblicazione è la `0
 numerazione della **generazione del pattern** è indipendente e resta `v2` (marker
 `<!-- REGOLE-DEL-PATTERN: v2 -->` in `AGENTS.md` e formato degli indici derivati).
 
+## 0.2.1
+
+Corretto un **falso positivo** nella rilevazione dei dati volatili: `tok/s` (unità di velocità,
+es. `108 tok/s`) veniva scambiato per una stima di token e **bloccava la rigenerazione
+dell'indice**. Ora le stime (`~1.200 token`, `1234 tok`, `token stimati`) restano rifiutate e i
+tassi (`tok/s`) passano. Vale per `memoria_index.py` e `memoria_check.py`.
+
 ## 0.2.0
 
 Il pattern diventa **una wiki autoconsistente agent-agnostica**, senza dipendenze da tool o

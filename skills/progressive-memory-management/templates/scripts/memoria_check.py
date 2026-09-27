@@ -57,8 +57,8 @@ VOLATILI = (
     (re.compile(r"\b\d{1,2}/\d{1,2}/\d{4}\b"), "una data"),
     (re.compile(r"\b\d{1,2}:\d{2}\b"), "un orario"),
     (re.compile(r"\b(?:oggi|ieri|domani|ultima sessione)\b", re.I), "un riferimento temporale"),
-    (re.compile(r"(?:~|≈|circa)\s*[\d.,]+\s*(?:tok|token)\b", re.I), "una stima di token"),
-    (re.compile(r"[\d.,]+\s*tok\b|\btoken stimat", re.I), "una stima di token"),
+    (re.compile(r"(?:~|≈|circa)\s*[\d.,]+\s*(?:tok|token)\b(?!\s*/)", re.I), "una stima di token"),
+    (re.compile(r"[\d.,]+\s*tok\b(?!\s*/)|\btoken stimat", re.I), "una stima di token"),
 )
 
 

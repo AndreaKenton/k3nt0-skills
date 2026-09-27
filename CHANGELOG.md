@@ -3,6 +3,15 @@
 Versioni del bundle di skill `k3nt0-skills` (tag `v*` → release con un archivio per skill).
 La versione di ogni singola skill è nel suo `VERSION`/`CHANGELOG.md`, accanto a `SKILL.md`.
 
+## 0.2.1
+
+`skills/progressive-memory-management` **0.2.1** (generazione del pattern `v2`).
+
+- Corretto un **falso positivo** nella rilevazione dei dati volatili: `tok/s` (unità di velocità,
+  es. `108 tok/s`) era scambiato per una stima di token e bloccava `memoria_index.py` su progetti
+  che parlano di prestazioni. Ora le stime (`~1.200 token`, `1234 tok`, `token stimati`) sono
+  rifiutate e i tassi (`tok/s`) passano.
+
 ## 0.2.0
 
 `skills/progressive-memory-management` **0.2.0** (generazione del pattern `v2`).
