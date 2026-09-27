@@ -4,6 +4,14 @@ Numerazione del **pacchetto** (questa cartella): la prima pubblicazione è la `0
 numerazione della **generazione del pattern** è indipendente e resta `v2` (marker
 `<!-- REGOLE-DEL-PATTERN: v2 -->` in `AGENTS.md` e formato degli indici derivati).
 
+## 0.2.2
+
+- **Budget di L0 di progetto alzato da 1000 a 1200 token** (`memoria_check.py`): la mappa in coda
+  a `AGENTS.md` cresce con i capitoli (un progetto con 6 capitoli arriva a ~990 token), quindi
+  1000 lasciava troppo poco margine alle regole. Il budget della memoria *globale* dell'agente
+  resta 1000.
+- Allineato il testo del template `00_STATO.md` al budget reale che il check applica (1.200).
+
 ## 0.2.1
 
 Corretto un **falso positivo** nella rilevazione dei dati volatili: `tok/s` (unità di velocità,

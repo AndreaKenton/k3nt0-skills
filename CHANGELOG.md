@@ -3,6 +3,17 @@
 Versioni del bundle di skill `k3nt0-skills` (tag `v*` → release con un archivio per skill).
 La versione di ogni singola skill è nel suo `VERSION`/`CHANGELOG.md`, accanto a `SKILL.md`.
 
+## 0.3.0
+
+- **Nuova skill `agent-prefix-hygiene` 0.1.0** — igiene del **prefisso dell'agente**: cosa tenere
+  nel file sempre caricato, cosa mettere in una capacità on demand, stabilità delle `description`,
+  capacità mono-progetto, esplorazione in contesto isolato. Con lo script **agnostico**
+  `prefix_check.py` (`--l0`, `--capabilities`, `--ignore`, `--budget`, `--desc-min/--desc-max`,
+  `--strict`, `--hash`): verifica volatili e budget del prefisso, limiti delle description, mappa
+  dichiarata vs trovata, ordine regole→mappa derivata, e stampa il costo (fisso vs on demand).
+- `skills/progressive-memory-management` **0.2.2** — budget di L0 di progetto alzato da 1000 a
+  1200 token (la mappa cresce con i capitoli); allineato il testo del template `00_STATO.md`.
+
 ## 0.2.1
 
 `skills/progressive-memory-management` **0.2.1** (generazione del pattern `v2`).

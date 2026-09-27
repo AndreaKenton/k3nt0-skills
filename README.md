@@ -9,6 +9,7 @@ asset. Nessuna dipendenza da un agente o da un modello specifico.
 
 | Skill | Cosa fa |
 |---|---|
+| [`agent-prefix-hygiene`](skills/agent-prefix-hygiene/) | Igiene del **prefisso dell'agente**: cosa tenere nel file sempre in contesto, cosa mettere in una capacità on demand, stabilità delle `description` (prompt cache), capacità mono-progetto, esplorazione in contesto isolato. Con `prefix_check.py`, agnostico: gli si dicono i file (`--l0`) e le cartelle delle capacità (`--capabilities`). |
 | [`progressive-memory-management`](skills/progressive-memory-management/) | Memoria di progetto a livelli **L0-L3** come *wiki autoconsistente*: `init` di un progetto nuovo, `migrate` non distruttivo di uno esistente, `check` di coerenza. Indici **derivati** (mappa in `AGENTS.md` e indice delle decisioni), invarianti verificati (I1–I11), prefisso stabile per la prompt cache. Nessuno strumento o estensione richiesti; adattatori per pi opzionali. |
 
 ## Come si usa con qualsiasi agente
@@ -30,7 +31,8 @@ python skills/progressive-memory-management/scripts/manage_memory.py migrate "<c
 python skills/progressive-memory-management/scripts/manage_memory.py check   "<cartella>"
 ```
 
-Dettagli in [`skills/progressive-memory-management/README.md`](skills/progressive-memory-management/README.md).
+Dettagli in [`skills/progressive-memory-management/README.md`](skills/progressive-memory-management/README.md)
+e in [`skills/agent-prefix-hygiene/README.md`](skills/agent-prefix-hygiene/README.md).
 
 ## Scaricare una sola skill (senza il resto del repo)
 
@@ -58,11 +60,15 @@ k3nt0-skills/
 ├── LICENSE
 ├── package.json
 └── skills/
+    ├── agent-prefix-hygiene/
+    │   ├── SKILL.md
+    │   ├── README.md
+    │   ├── VERSION · CHANGELOG.md
+    │   └── scripts/prefix_check.py
     └── progressive-memory-management/
         ├── SKILL.md
         ├── README.md
-        ├── VERSION
-        ├── CHANGELOG.md
+        ├── VERSION · CHANGELOG.md
         ├── scripts/manage_memory.py
         └── templates/
 ```

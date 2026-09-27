@@ -44,7 +44,9 @@ SCRIPT_PATTERN = "{{VERSION}}"          # versione del pacchetto che ha generato
 MEM_CANDIDATES = ("memoria", "manuale")
 SOGLIA_AVVISO = 6000
 SOGLIA_ERRORE = 8000
-BUDGET_L0 = 1000            # token: oltre, L0 va alleggerito (procedure e dettagli altrove)
+BUDGET_L0 = 1200            # token: oltre, L0 va alleggerito (procedure e dettagli altrove).
+                            # 1200 e non 1000 perché la mappa cresce con i capitoli: è il
+                            # prezzo del ToC, e va lasciato margine alle regole.
 BUDGET_STATO = 1200         # token: `00_STATO.md` si legge a ogni sessione
 DESC_MIN = 80               # caratteri: sotto, la descrizione non fa scattare il routing
 DESC_MAX = 400              # caratteri: la descrizione sta sempre nel prefisso
